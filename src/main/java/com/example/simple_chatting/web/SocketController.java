@@ -1,6 +1,6 @@
-package com.example.simple_chatting.rest;
+package com.example.simple_chatting.web;
 
-import com.example.simple_chatting.VO.SocketVO;
+import com.example.simple_chatting.dto.SocketVO;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
