@@ -15,7 +15,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     public Long join(RegisterUserRequest request) {
-        validateDuplicateUser(request.getLoginId());
+        validateDuplicateUser(request.getLoginId(), request.getPassword());
         return userRepository.save(request.toEntity()).getId();
     }
 
@@ -26,10 +26,10 @@ public class UserService {
         return AccessUser.of(request);
     }
 
-    private void validateDuplicateUser(String loginId) {
-        Optional<User> findUser = userRepository.findByLoginId(loginId);
+    private void validateDuplicateUser(String loginId, String password) {
+        Optional<User> findUser = userRepository.findByLoginIdAndPassword(loginId, password);
         if (!findUser.isEmpty()) {
-            throw new IllegalStateException("이미 존재하는 아이디입니다. 다른 아이디를 입력해주세요.");
+            throw new IllegalStateException("이미 존재하는 아이디와 비밀번호입니다. 다른 아이디와 비밀번호를 입력해주세요.");
         }
     }
 }

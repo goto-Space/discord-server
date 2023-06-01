@@ -33,6 +33,13 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public Optional<User> findByLoginIdAndPassword(String loginId, String password) {
+        return findAll().stream()
+            .filter(user -> user.getLoginId().equals(loginId) && user.getPassword().equals(password))
+            .findFirst();
+    }
+
+    @Override
     public List<User> findAll() {
         return new ArrayList<>(store.values());
     }
