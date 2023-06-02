@@ -24,4 +24,10 @@ public class User {
     public void setId(Long id) {
         this.id = id;
     }
+
+    public void authenticate(String password) {
+        if (!password.equals(this.password)) {
+            throw new IllegalStateException("비밀번호가 일치하지 않습니다.");
+        }
+    }
 }
