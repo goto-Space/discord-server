@@ -1,6 +1,6 @@
 package com.example.simple_chatting.service;
 
-import com.example.simple_chatting.domain.User;
+import com.example.simple_chatting.domain.user.User;
 import com.example.simple_chatting.dto.user.LoginUserRequest;
 import com.example.simple_chatting.dto.user.RegisterUserRequest;
 import com.example.simple_chatting.repository.UserRepository;
