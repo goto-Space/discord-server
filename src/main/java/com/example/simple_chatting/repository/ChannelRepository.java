@@ -18,4 +18,6 @@ public interface ChannelRepository {
     List<Channel> findAll();
 
     void clear();
+
+    void deleteById(Long id);
 }
