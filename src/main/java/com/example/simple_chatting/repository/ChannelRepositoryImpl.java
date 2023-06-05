@@ -49,4 +49,9 @@ public class ChannelRepositoryImpl implements ChannelRepository {
     public void clear() {
         store.clear();
     }
+
+    @Override
+    public void deleteById(Long id) {
+        store.remove(id);
+    }
 }

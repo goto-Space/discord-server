@@ -96,4 +96,42 @@ class ChannelServiceTest {
         // then
         assertThrows(IllegalArgumentException.class, () -> channelService.createChannel(request2));
     }
+
+
+    @Test
+    @DisplayName("채널 생성 후 삭제 테스트")
+    void deleteChannel() {
+        // given
+        String channelName1 = "화상 채널1";
+        CreateChannelRequest request1 = new CreateChannelRequest().builder()
+            .type(ChannelType.VIDEO)
+            .name(channelName1)
+            .build();
+
+        // when
+        Long channelId = channelService.createChannel(request1);
+        channelService.deleteById(channelId);
+
+        // then
+        assertNull(channelRepository.findById(channelId));
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 채널은 삭제할 수 없다.")
+    void deleteInvalidChannel() {
+        // given
+        String channelName1 = "화상 채널1";
+        CreateChannelRequest request1 = new CreateChannelRequest().builder()
+            .type(ChannelType.VIDEO)
+            .name(channelName1)
+            .build();
+
+        // when
+        Long channelId = channelService.createChannel(request1);
+        channelService.deleteById(channelId);
+
+        // then
+        assertThrows(IllegalArgumentException.class, () -> channelService.deleteById(channelId));
+    }
+
 }
