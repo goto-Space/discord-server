@@ -1,4 +1,4 @@
-package com.example.simple_chatting.domain;
+package com.example.simple_chatting.domain.user;
 
 import lombok.AccessLevel;
 import lombok.Builder;

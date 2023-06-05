@@ -1,6 +1,6 @@
 package com.example.simple_chatting.dto.user;
 
-import com.example.simple_chatting.domain.User;
+import com.example.simple_chatting.domain.user.User;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;
 import lombok.Getter;

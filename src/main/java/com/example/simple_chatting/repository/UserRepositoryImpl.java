@@ -1,6 +1,6 @@
 package com.example.simple_chatting.repository;
 
-import com.example.simple_chatting.domain.User;
+import com.example.simple_chatting.domain.user.User;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
