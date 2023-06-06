@@ -1,6 +1,6 @@
 package com.example.simple_chatting.domain.channel;
 
-import com.example.simple_chatting.dto.chatRoom.CreateChannelRequest;
+import com.example.simple_chatting.dto.channel.CreateChannelRequest;
 import com.example.simple_chatting.security.AccessUser;
 import org.springframework.stereotype.Component;
 

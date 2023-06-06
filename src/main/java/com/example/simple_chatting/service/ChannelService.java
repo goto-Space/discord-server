@@ -3,7 +3,7 @@ package com.example.simple_chatting.service;
 import com.example.simple_chatting.domain.channel.Channel;
 import com.example.simple_chatting.domain.channel.ChannelFactory;
 import com.example.simple_chatting.domain.user.User;
-import com.example.simple_chatting.dto.chatRoom.CreateChannelRequest;
+import com.example.simple_chatting.dto.channel.CreateChannelRequest;
 import com.example.simple_chatting.repository.ChannelRepository;
 import com.example.simple_chatting.repository.UserRepository;
 import com.example.simple_chatting.security.AccessUser;
