@@ -33,7 +33,7 @@ public class ChannelController {
         @Valid @RequestBody CreateChannelRequest request) {
         Long channelId = channelService.createChannel(request, accessUser);
 
-        if (request.getType().equals(ChannelType.TEXT)) {
+        if (ChannelType.TEXT.equals(request.getType())) {
             textChatService.sendEnterTextMessage(channelId, accessUser.getUserName());
         }
 
@@ -59,7 +59,7 @@ public class ChannelController {
         channelService.join(request, accessUser, channelId);
         ChannelType channelType = channelService.getChannelType(channelId);
 
-        if (channelType.equals(ChannelType.TEXT)) {
+        if (ChannelType.TEXT.equals(channelType)) {
             textChatService.sendEnterTextMessage(channelId, accessUser.getUserName());
         }
 
@@ -83,6 +83,10 @@ public class ChannelController {
         @PathVariable Long channelId
     ) {
         channelService.leave(accessUser, channelId);
+        if (channelService.isChannel(channelId) && channelService.getChannelType(channelId).equals(ChannelType.TEXT)) {
+            textChatService.sendLeaveTextMessage(channelId, accessUser.getUserName());
+        }
+
         return ResponseEntity.ok().build();
     }
 }

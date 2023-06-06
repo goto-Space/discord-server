@@ -20,6 +20,14 @@ public class TextChatService {
         sendTextMessageToSpecificChannel(textChannelId, enterTextMessageResponse);
     }
 
+    public void sendLeaveTextMessage(
+        final Long textChannelId,
+        final String senderName) {
+        String content = makeLeaveTextContent(senderName);
+        TextMessageResponse leaveTextMessageResponse = makeTextMessageResponse(senderName, content);
+        sendTextMessageToSpecificChannel(textChannelId, leaveTextMessageResponse);
+    }
+
     private String makeEnterTextContent(String senderName) {
         return senderName + "님이 채팅방에 입장하셨습니다.";
     }

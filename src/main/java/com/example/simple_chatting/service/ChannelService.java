@@ -67,8 +67,16 @@ public class ChannelService {
     }
 
     public ChannelType getChannelType(Long channelId) {
-        Channel channel = checkExistAndFindChannel(channelId);
+        Channel channel = channelRepository.findById(channelId);
         return channel.getType();
+    }
+
+    public boolean isChannel(Long channelId) {
+        Channel findChannel = channelRepository.findById(channelId);
+        if (findChannel == null) {
+            return false;
+        }
+        return true;
     }
 
     private void validateDuplicateChannel(CreateChannelRequest request) {
