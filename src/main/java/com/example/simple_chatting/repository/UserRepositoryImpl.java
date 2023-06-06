@@ -15,7 +15,9 @@ public class UserRepositoryImpl implements UserRepository {
     private static AtomicLong sequenceNumber = new AtomicLong();
 
     public User save(User user) {
-        user.setId(sequenceNumber.incrementAndGet());
+        if (user.getId() == null) {
+            user.setId(sequenceNumber.incrementAndGet());
+        }
         store.put(user.getId(), user);
         return user;
     }
