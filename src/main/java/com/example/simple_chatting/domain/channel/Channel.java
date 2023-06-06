@@ -4,6 +4,7 @@ import com.example.simple_chatting.common.ChannelType;
 import com.example.simple_chatting.domain.user.User;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,12 +18,14 @@ public abstract class Channel {
     private String name;
     private List<User> users;
     private String hostUserLoginId;
+    private String invitationCode;
 
     public Channel(ChannelType type, String name, String hostUserLoginId) {
         this.type = type;
         this.name = name;
         this.users = new LinkedList<>();
         this.hostUserLoginId = hostUserLoginId;
+        this.invitationCode = UUID.randomUUID().toString();
     }
 
     public void setId(Long id) {
