@@ -41,6 +41,13 @@ public class ChannelService {
         channel.join(user);
     }
 
+    public String getInvitationCode(AccessUser accessUser, Long channelId) {
+        checkExist(channelId);
+        User user = validateAndFindUser(accessUser);
+        Channel channel = channelRepository.findById(channelId);
+        return channel.getInvitationCode();
+    }
+
     private void validateDuplicateChannel(CreateChannelRequest request) {
         Optional<Channel> findChannel = channelRepository.findByTypeAndName(request.getType(), request.getName());
         if (!findChannel.isEmpty()) {
