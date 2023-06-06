@@ -8,8 +8,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AccessUser {
     private final String loginId;
+    private final String userName;
 
-    public static AccessUser of(LoginUserRequest loginUserRequest) {
-        return new AccessUser(loginUserRequest.getLoginId());
+    public static AccessUser of(final String loginId, final String userName) {
+        return new AccessUser(loginId, userName);
     }
 }

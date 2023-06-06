@@ -24,7 +24,7 @@ public class UserService {
         User user = userRepository.findByLoginId(request.getLoginId())
             .orElseThrow(() -> new IllegalStateException("사용자 정보가 일치하지 않습니다."));
         user.authenticate(request.getPassword());
-        return AccessUser.of(request);
+        return AccessUser.of(user.getLoginId(), user.getName());
     }
 
     private void validateDuplicateUser(String loginId, String password) {
