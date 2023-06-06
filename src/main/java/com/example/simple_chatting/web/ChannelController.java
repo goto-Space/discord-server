@@ -1,5 +1,6 @@
 package com.example.simple_chatting.web;
 
+import com.example.simple_chatting.common.ChannelType;
 import com.example.simple_chatting.dto.channel.CreateChannelRequest;
 import com.example.simple_chatting.dto.channel.CreateChannelResponse;
 import com.example.simple_chatting.dto.channel.GetChannelInvitationCodeResponse;
@@ -7,6 +8,7 @@ import com.example.simple_chatting.dto.channel.JoinChannelRequest;
 import com.example.simple_chatting.security.AccessUser;
 import com.example.simple_chatting.security.LoginUser;
 import com.example.simple_chatting.service.ChannelService;
+import com.example.simple_chatting.service.TextChatService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,12 +25,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ChannelController {
     private final ChannelService channelService;
+    private final TextChatService textChatService;
 
     @PostMapping
     public CreateChannelResponse createChannel(
         @LoginUser AccessUser accessUser,
         @Valid @RequestBody CreateChannelRequest request) {
         Long channelId = channelService.createChannel(request, accessUser);
+
+        if (request.getType().equals(ChannelType.TEXT)) {
+            textChatService.sendEnterTextMessage(channelId, accessUser.getUserName());
+        }
 
         return new CreateChannelResponse().builder()
             .channelId(channelId)
@@ -50,6 +57,12 @@ public class ChannelController {
         @Valid @RequestBody JoinChannelRequest request
     ) {
         channelService.join(request, accessUser, channelId);
+        ChannelType channelType = channelService.getChannelType(channelId);
+
+        if (channelType.equals(ChannelType.TEXT)) {
+            textChatService.sendEnterTextMessage(channelId, accessUser.getUserName());
+        }
+
         return ResponseEntity.ok().build();
     }
 

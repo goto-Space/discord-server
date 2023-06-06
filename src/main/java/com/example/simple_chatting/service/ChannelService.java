@@ -1,5 +1,6 @@
 package com.example.simple_chatting.service;
 
+import com.example.simple_chatting.common.ChannelType;
 import com.example.simple_chatting.domain.channel.Channel;
 import com.example.simple_chatting.domain.channel.ChannelFactory;
 import com.example.simple_chatting.domain.user.User;
@@ -40,6 +41,7 @@ public class ChannelService {
         Channel channel = checkExistAndFindChannel(channelId);
         validateInvitationCode(channel, request);
         channel.join(user);
+
         channelRepository.save(channel);
     }
 
@@ -64,6 +66,11 @@ public class ChannelService {
         }
     }
 
+    public ChannelType getChannelType(Long channelId) {
+        Channel channel = checkExistAndFindChannel(channelId);
+        return channel.getType();
+    }
+
     private void validateDuplicateChannel(CreateChannelRequest request) {
         Optional<Channel> findChannel = channelRepository.findByTypeAndName(request.getType(), request.getName());
         if (!findChannel.isEmpty()) {
@@ -86,14 +93,14 @@ public class ChannelService {
     private Channel checkExistAndFindChannel(Long id) {
         Channel findChannel = channelRepository.findById(id);
         if (findChannel == null) {
-            throw new IllegalArgumentException("존재하지 않는 채널은 삭제할 수 없습니다.");
+            throw new IllegalArgumentException("해당 채널은 존재하지 않습니다.");
         }
         return findChannel;
     }
 
     private void checkHost(Channel channel, AccessUser accessUser) {
         if (!channel.getHostUserLoginId().equals(accessUser.getLoginId())) {
-            throw new IllegalArgumentException("방장이 아닌 사람은 채널을 삭제할 수 없습니다.");
+            throw new IllegalArgumentException("방장이 아닙니다.");
         }
     }
 
