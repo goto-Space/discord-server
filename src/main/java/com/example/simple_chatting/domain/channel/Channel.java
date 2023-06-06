@@ -29,7 +29,18 @@ public abstract class Channel {
         this.id = id;
     }
 
-    public void addUser(User user) {
+    public void join(User user) {
+        if (isEqualOrOverThanMaxUser()) {
+            throw new IllegalStateException("한 채팅방에는 동시에 최대 6명까지 참여할 수 있습니다.");
+        }
         users.add(user);
+    }
+
+    public void changeHost(User user) {
+        this.hostUserLoginId = user.getLoginId();
+    }
+
+    private boolean isEqualOrOverThanMaxUser() {
+        return users.size() >= MAX_USER;
     }
 }
