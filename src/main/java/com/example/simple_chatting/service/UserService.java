@@ -4,7 +4,7 @@ import com.example.simple_chatting.domain.user.User;
 import com.example.simple_chatting.dto.user.LoginUserRequest;
 import com.example.simple_chatting.dto.user.RegisterUserRequest;
 import com.example.simple_chatting.repository.UserRepository;
-import com.example.simple_chatting.security.session.AccessUser;
+import com.example.simple_chatting.security.AccessUser;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,8 @@ public class UserService {
 
     public Long join(RegisterUserRequest request) {
         validateDuplicateUser(request.getLoginId(), request.getPassword());
-        return userRepository.save(request.toEntity()).getId();
+        User registeredUser = userRepository.save(request.toEntity());
+        return registeredUser.getId();
     }
 
     public AccessUser login(LoginUserRequest request) {

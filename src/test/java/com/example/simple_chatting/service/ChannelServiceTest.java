@@ -2,14 +2,22 @@ package com.example.simple_chatting.service;
 
 import com.example.simple_chatting.common.ChannelType;
 import com.example.simple_chatting.dto.chatRoom.CreateChannelRequest;
+import com.example.simple_chatting.dto.user.LoginUserRequest;
+import com.example.simple_chatting.dto.user.RegisterUserRequest;
 import com.example.simple_chatting.repository.ChannelRepository;
+import com.example.simple_chatting.repository.UserRepository;
+import com.example.simple_chatting.security.AccessUser;
+import com.example.simple_chatting.security.UserSessionManager;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 class ChannelServiceTest {
@@ -18,8 +26,31 @@ class ChannelServiceTest {
 
     @Autowired ChannelRepository channelRepository;
 
+    @Autowired UserService userService;
+
+    @Autowired UserRepository userRepository;
+
+    @Autowired UserSessionManager userSessionManager;
+
+    AccessUser accessUser;
+
+    @BeforeEach
+    void before() {
+        String name = "sonny";
+        String loginId = "network-protocol";
+        String password = "2018";
+        RegisterUserRequest registerUserRequest = new RegisterUserRequest(name, loginId, password);
+        userService.join(registerUserRequest);
+
+        LoginUserRequest loginUserRequest = new LoginUserRequest(loginId, password);
+        accessUser = userService.login(loginUserRequest);
+
+        userSessionManager.saveUser(accessUser);
+    }
+
     @AfterEach
     void after() {
+        userRepository.clear();
         channelRepository.clear();
     }
 
@@ -34,7 +65,7 @@ class ChannelServiceTest {
             .build();
 
         // when
-        Long channelId = channelService.createChannel(request);
+        Long channelId = channelService.createChannel(request, accessUser);
 
         // then
         assertEquals(channelId, channelRepository.findById(channelId).getId());
@@ -51,7 +82,7 @@ class ChannelServiceTest {
             .build();
 
         // when
-        Long channelId = channelService.createChannel(request);
+        Long channelId = channelService.createChannel(request, accessUser);
 
         // then
         assertEquals(channelId, channelRepository.findById(channelId).getId());
@@ -68,7 +99,7 @@ class ChannelServiceTest {
             .build();
 
         // when
-        Long channelId = channelService.createChannel(request);
+        Long channelId = channelService.createChannel(request, accessUser);
 
         // then
         assertEquals(channelId, channelRepository.findById(channelId).getId());
@@ -91,10 +122,10 @@ class ChannelServiceTest {
             .build();
 
         // when
-        channelService.createChannel(request1);
+        channelService.createChannel(request1, accessUser);
 
         // then
-        assertThrows(IllegalArgumentException.class, () -> channelService.createChannel(request2));
+        assertThrows(IllegalArgumentException.class, () -> channelService.createChannel(request2, accessUser));
     }
 
 
@@ -109,8 +140,8 @@ class ChannelServiceTest {
             .build();
 
         // when
-        Long channelId = channelService.createChannel(request1);
-        channelService.deleteById(channelId);
+        Long channelId = channelService.createChannel(request1, accessUser);
+        channelService.deleteById(channelId, accessUser);
 
         // then
         assertNull(channelRepository.findById(channelId));
@@ -127,11 +158,38 @@ class ChannelServiceTest {
             .build();
 
         // when
-        Long channelId = channelService.createChannel(request1);
-        channelService.deleteById(channelId);
+        Long channelId = channelService.createChannel(request1, accessUser);
+        channelService.deleteById(channelId, accessUser);
 
         // then
-        assertThrows(IllegalArgumentException.class, () -> channelService.deleteById(channelId));
+        assertThrows(IllegalArgumentException.class, () -> channelService.deleteById(channelId, accessUser));
+    }
+
+    @Test
+    @DisplayName("방장만 채널을 삭제할 수 있다.")
+    void deleteChannelOnlyHost() {
+        // given
+        String name = "shw";
+        String loginId = "loginHi";
+        String password = "passwordHi";
+        RegisterUserRequest registerUserRequest = new RegisterUserRequest(name, loginId, password);
+        userService.join(registerUserRequest);
+
+        LoginUserRequest loginUserRequest = new LoginUserRequest(loginId, password);
+        AccessUser anotherAccessUser = userService.login(loginUserRequest);
+        userSessionManager.saveUser(anotherAccessUser);
+
+        String channelName1 = "화상 채널1";
+        CreateChannelRequest request1 = new CreateChannelRequest().builder()
+            .type(ChannelType.VIDEO)
+            .name(channelName1)
+            .build();
+
+        // when
+        Long channelId = channelService.createChannel(request1, accessUser);
+
+        // then
+        assertThrows(IllegalArgumentException.class, () -> channelService.deleteById(channelId, anotherAccessUser));
     }
 
 }

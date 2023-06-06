@@ -2,6 +2,8 @@ package com.example.simple_chatting.web;
 
 import com.example.simple_chatting.dto.chatRoom.CreateChannelRequest;
 import com.example.simple_chatting.dto.chatRoom.CreateChannelResponse;
+import com.example.simple_chatting.security.AccessUser;
+import com.example.simple_chatting.security.LoginUser;
 import com.example.simple_chatting.service.ChannelService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +21,10 @@ public class ChannelController {
     private final ChannelService channelService;
 
     @PostMapping
-    public CreateChannelResponse createChannel(@Valid @RequestBody CreateChannelRequest request) {
-        Long channelId = channelService.createChannel(request);
+    public CreateChannelResponse createChannel(
+        @LoginUser AccessUser accessUser,
+        @Valid @RequestBody CreateChannelRequest request) {
+        Long channelId = channelService.createChannel(request, accessUser);
 
         return new CreateChannelResponse().builder()
             .channelId(channelId)
@@ -28,8 +32,10 @@ public class ChannelController {
     }
 
     @DeleteMapping("/{channelId}")
-    public ResponseEntity<HttpStatus> deleteChannel(@PathVariable Long channelId) {
-        channelService.deleteById(channelId);
+    public ResponseEntity<HttpStatus> deleteChannel(
+        @LoginUser AccessUser accessUser,
+        @PathVariable Long channelId) {
+        channelService.deleteById(channelId, accessUser);
         return ResponseEntity.ok().build();
     }
 

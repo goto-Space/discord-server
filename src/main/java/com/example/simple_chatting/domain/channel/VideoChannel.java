@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class VideoChannel extends Channel {
     @Builder
-    public VideoChannel(ChannelType type, String name) {
-        super(type, name);
+    public VideoChannel(ChannelType type, String name, String hostUserLoginId) {
+        super(type, name, hostUserLoginId);
     }
 }
