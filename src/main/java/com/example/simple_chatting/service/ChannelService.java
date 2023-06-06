@@ -4,6 +4,7 @@ import com.example.simple_chatting.domain.channel.Channel;
 import com.example.simple_chatting.domain.channel.ChannelFactory;
 import com.example.simple_chatting.domain.user.User;
 import com.example.simple_chatting.dto.channel.CreateChannelRequest;
+import com.example.simple_chatting.dto.channel.JoinChannelRequest;
 import com.example.simple_chatting.repository.ChannelRepository;
 import com.example.simple_chatting.repository.UserRepository;
 import com.example.simple_chatting.security.AccessUser;
@@ -34,11 +35,33 @@ public class ChannelService {
         channelRepository.deleteById(id);
     }
 
-    public void join(AccessUser accessUser, Long channelId) {
-        checkExist(channelId);
+    public void join(JoinChannelRequest request, AccessUser accessUser, Long channelId) {
         User user = validateAndFindUser(accessUser);
-        Channel channel = channelRepository.findById(channelId);
+        Channel channel = checkExistAndFindChannel(channelId);
+        validateInvitationCode(channel, request);
         channel.join(user);
+        channelRepository.save(channel);
+    }
+
+    public String getInvitationCode(AccessUser accessUser, Long channelId) {
+        User requestUser = validateAndFindUser(accessUser);
+        Channel channel = checkExistAndFindChannel(channelId);
+        validateChannelUser(channel, requestUser);
+        return channel.getInvitationCode();
+    }
+
+    public void leave(AccessUser accessUser, Long channelId) {
+        User user = validateAndFindUser(accessUser);
+        Channel channel = checkExistAndFindChannel(channelId);
+        validateChannelUser(channel, user);
+        channel.leaveUser(user);
+
+        if (channel.isLeftUser()) {
+            channelRepository.save(channel);
+        }
+        else {
+            channelRepository.deleteById(channelId);
+        }
     }
 
     private void validateDuplicateChannel(CreateChannelRequest request) {
@@ -56,11 +79,11 @@ public class ChannelService {
     }
 
     private void validateToDelete(Long id, AccessUser accessUser) {
-        Channel findChannel = checkExist(id);
+        Channel findChannel = checkExistAndFindChannel(id);
         checkHost(findChannel, accessUser);
     }
 
-    private Channel checkExist(Long id) {
+    private Channel checkExistAndFindChannel(Long id) {
         Channel findChannel = channelRepository.findById(id);
         if (findChannel == null) {
             throw new IllegalArgumentException("존재하지 않는 채널은 삭제할 수 없습니다.");
@@ -71,6 +94,18 @@ public class ChannelService {
     private void checkHost(Channel channel, AccessUser accessUser) {
         if (!channel.getHostUserLoginId().equals(accessUser.getLoginId())) {
             throw new IllegalArgumentException("방장이 아닌 사람은 채널을 삭제할 수 없습니다.");
+        }
+    }
+
+    private void validateInvitationCode(Channel channel, JoinChannelRequest request) {
+        if (!channel.matchInvitationCode(request.getInvitationCode())) {
+            throw new IllegalArgumentException("채널 코드가 일치하지 않습니다.");
+        }
+    }
+
+    private void validateChannelUser(Channel channel, User user) {
+        if (!channel.isUserIn(user)) {
+            throw new IllegalStateException("요청한 사용자가 채널에 속해있지 않습니다.");
         }
     }
 }
