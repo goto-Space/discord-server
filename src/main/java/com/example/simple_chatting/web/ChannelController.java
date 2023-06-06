@@ -9,6 +9,7 @@ import com.example.simple_chatting.security.AccessUser;
 import com.example.simple_chatting.security.LoginUser;
 import com.example.simple_chatting.service.ChannelService;
 import com.example.simple_chatting.service.TextChatService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,9 @@ public class ChannelController {
     private final ChannelService channelService;
     private final TextChatService textChatService;
 
+    @Operation(
+        summary = "채널 생성"
+    )
     @PostMapping
     public CreateChannelResponse createChannel(
         @LoginUser AccessUser accessUser,
@@ -42,6 +46,9 @@ public class ChannelController {
             .build();
     }
 
+    @Operation(
+        summary = "채널 삭제"
+    )
     @DeleteMapping("/{channelId}")
     public ResponseEntity<HttpStatus> deleteChannel(
         @LoginUser AccessUser accessUser,
@@ -50,6 +57,9 @@ public class ChannelController {
         return ResponseEntity.ok().build();
     }
 
+    @Operation(
+        summary = "채널 입장"
+    )
     @PutMapping("/{channelId}")
     public ResponseEntity<HttpStatus> joinChannel(
         @LoginUser AccessUser accessUser,
@@ -66,6 +76,9 @@ public class ChannelController {
         return ResponseEntity.ok().build();
     }
 
+    @Operation(
+        summary = "채널 번호 조회"
+    )
     @GetMapping("/{channelId}/invitationCode")
     public GetChannelInvitationCodeResponse getInvitationCode(
         @LoginUser AccessUser accessUser,
@@ -77,6 +90,9 @@ public class ChannelController {
             .build();
     }
 
+    @Operation(
+        summary = "채널 퇴장"
+    )
     @PutMapping("/{channelId}/leave")
     public ResponseEntity<HttpStatus> leaveChannel(
         @LoginUser AccessUser accessUser,
