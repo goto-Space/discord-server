@@ -79,7 +79,7 @@ public class ChannelController {
     }
 
     @Operation(
-        summary = "채널 번호 조회"
+        summary = "채널 초대 코드 조회"
     )
     @GetMapping("/{channelId}/invitationCode")
     public GetChannelInvitationCodeResponse getInvitationCode(
