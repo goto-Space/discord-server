@@ -1,6 +1,6 @@
 package com.example.simple_chatting.service;
 
-import com.example.simple_chatting.domain.user.User;
+import com.example.simple_chatting.dto.textMessage.TextMessageRequest;
 import com.example.simple_chatting.dto.textMessage.TextMessageResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -28,16 +28,24 @@ public class TextChatService {
         sendTextMessageToSpecificChannel(textChannelId, leaveTextMessageResponse);
     }
 
+    public void sendTextMessage(
+        TextMessageRequest request
+    ) {
+        TextMessageResponse textMessageResponse = makeTextMessageResponse(request.getSenderName(), request.getContent());
+        sendTextMessageToSpecificChannel(request.getChannelId(), textMessageResponse);
+
+        // TODO : 텍스트 채팅 로그 기록
+    }
+
     private String makeEnterTextContent(String senderName) {
         return senderName + "님이 채팅방에 입장하셨습니다.";
     }
 
     private TextMessageResponse makeTextMessageResponse(String senderName, String content) {
-        TextMessageResponse enterTextMessageResponse = new TextMessageResponse().builder()
+        return new TextMessageResponse().builder()
             .senderName(senderName)
             .content(content)
             .build();
-        return enterTextMessageResponse;
     }
 
     private void sendTextMessageToSpecificChannel(Long textChannelId, TextMessageResponse textMessageResponse) {
