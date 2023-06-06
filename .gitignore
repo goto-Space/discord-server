@@ -47,3 +47,6 @@ rebel.xml
 .gradle/7.6.1/checksums/sha1-checksums.bin
 .gradle/7.6.1/checksums/md5-checksums.bin
 .gradle/7.6.1/checksums/checksums.lock
+*.lock
+*.probe
+*.bin
