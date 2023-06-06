@@ -2,7 +2,6 @@ package com.example.simple_chatting.web;
 
 import com.example.simple_chatting.common.ChannelType;
 import com.example.simple_chatting.dto.textMessage.TextMessageRequest;
-import com.example.simple_chatting.dto.textMessage.TextMessageResponse;
 import com.example.simple_chatting.service.ChannelService;
 import com.example.simple_chatting.service.TextChatService;
 import lombok.RequiredArgsConstructor;
