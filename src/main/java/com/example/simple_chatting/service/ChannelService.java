@@ -36,19 +36,32 @@ public class ChannelService {
     }
 
     public void join(JoinChannelRequest request, AccessUser accessUser, Long channelId) {
-        checkChannelExist(channelId);
         User user = validateAndFindUser(accessUser);
-        Channel channel = channelRepository.findById(channelId);
+        Channel channel = checkExistAndFindChannel(channelId);
         validateInvitationCode(channel, request);
         channel.join(user);
+        channelRepository.save(channel);
     }
 
     public String getInvitationCode(AccessUser accessUser, Long channelId) {
-        checkChannelExist(channelId);
         User requestUser = validateAndFindUser(accessUser);
-        Channel channel = channelRepository.findById(channelId);
+        Channel channel = checkExistAndFindChannel(channelId);
         validateChannelUser(channel, requestUser);
         return channel.getInvitationCode();
+    }
+
+    public void leave(AccessUser accessUser, Long channelId) {
+        User user = validateAndFindUser(accessUser);
+        Channel channel = checkExistAndFindChannel(channelId);
+        validateChannelUser(channel, user);
+        channel.leaveUser(user);
+
+        if (channel.isLeftUser()) {
+            channelRepository.save(channel);
+        }
+        else {
+            channelRepository.deleteById(channelId);
+        }
     }
 
     private void validateDuplicateChannel(CreateChannelRequest request) {
@@ -66,11 +79,11 @@ public class ChannelService {
     }
 
     private void validateToDelete(Long id, AccessUser accessUser) {
-        Channel findChannel = checkChannelExist(id);
+        Channel findChannel = checkExistAndFindChannel(id);
         checkHost(findChannel, accessUser);
     }
 
-    private Channel checkChannelExist(Long id) {
+    private Channel checkExistAndFindChannel(Long id) {
         Channel findChannel = channelRepository.findById(id);
         if (findChannel == null) {
             throw new IllegalArgumentException("존재하지 않는 채널은 삭제할 수 없습니다.");
@@ -90,9 +103,9 @@ public class ChannelService {
         }
     }
 
-    private void validateChannelUser(Channel channel, User requestUser) {
-        if (!channel.isUserIn(requestUser)) {
-            throw new IllegalStateException("현재 채널에 속해있는 사용자만 채널 코드를 볼 수 있습니다.");
+    private void validateChannelUser(Channel channel, User user) {
+        if (!channel.isUserIn(user)) {
+            throw new IllegalStateException("요청한 사용자가 채널에 속해있지 않습니다.");
         }
     }
 }
