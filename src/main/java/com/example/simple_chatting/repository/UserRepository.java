@@ -15,4 +15,6 @@ public interface UserRepository {
     Optional<User> findByLoginIdAndPassword(String loginId, String password);
 
     List<User> findAll();
+
+    void clear();
 }

@@ -2,8 +2,11 @@ package com.example.simple_chatting.service;
 
 import com.example.simple_chatting.domain.channel.Channel;
 import com.example.simple_chatting.domain.channel.ChannelFactory;
+import com.example.simple_chatting.domain.user.User;
 import com.example.simple_chatting.dto.chatRoom.CreateChannelRequest;
 import com.example.simple_chatting.repository.ChannelRepository;
+import com.example.simple_chatting.repository.UserRepository;
+import com.example.simple_chatting.security.AccessUser;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,20 +16,23 @@ import org.springframework.stereotype.Service;
 public class ChannelService {
     private final ChannelFactory channelFactory;
     private final ChannelRepository channelRepository;
+    private final UserRepository userRepository;
 
-    public Long createChannel(CreateChannelRequest request) {
+    public Long createChannel(CreateChannelRequest request, AccessUser accessUser) {
         validateDuplicateChannel(request);
+        User user = validateAndFindUser(accessUser);
 
-        Channel channel = channelFactory.makeChannel(request);
-        Channel createdChannel = channelRepository.save(channel);
-        return createdChannel.getId();
+        Channel createdChannel = channelFactory.makeChannel(request, accessUser);
+        createdChannel.addUser(user);
+
+        Channel savedChannel = channelRepository.save(createdChannel);
+        return savedChannel.getId();
     }
 
-    public void deleteById(Long id) {
-        checkExistToDelete(id);
+    public void deleteById(Long id, AccessUser accessUser) {
+        validateToDelete(id, accessUser);
         channelRepository.deleteById(id);
     }
-
 
     private void validateDuplicateChannel(CreateChannelRequest request) {
         Optional<Channel> findChannel = channelRepository.findByTypeAndName(request.getType(), request.getName());
@@ -35,11 +41,29 @@ public class ChannelService {
         }
     }
 
-    private void checkExistToDelete(Long id) {
+    private User validateAndFindUser(AccessUser accessUser) {
+        String accessUserLoginId = accessUser.getLoginId();
+        User user = userRepository.findByLoginId(accessUserLoginId)
+            .orElseThrow(() -> new IllegalStateException("현재 로그인 회원은 존재하지 않는 회원입니다."));
+        return user;
+    }
+
+    private void validateToDelete(Long id, AccessUser accessUser) {
+        Channel findChannel = checkExist(id);
+        checkHost(findChannel, accessUser);
+    }
+
+    private Channel checkExist(Long id) {
         Channel findChannel = channelRepository.findById(id);
         if (findChannel == null) {
             throw new IllegalArgumentException("존재하지 않는 채널은 삭제할 수 없습니다.");
         }
+        return findChannel;
     }
 
+    private void checkHost(Channel channel, AccessUser accessUser) {
+        if (!channel.getHostUserLoginId().equals(accessUser.getLoginId())) {
+            throw new IllegalArgumentException("방장이 아닌 사람은 채널을 삭제할 수 없습니다.");
+        }
+    }
 }
