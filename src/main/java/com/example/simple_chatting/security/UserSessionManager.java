@@ -1,10 +1,10 @@
-package com.example.simple_chatting.security.session;
+package com.example.simple_chatting.security;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import static com.example.simple_chatting.security.session.SessionConst.USER_SESSION_KEY;
+import static com.example.simple_chatting.security.SessionConst.USER_SESSION_KEY;
 
 @Component
 @RequiredArgsConstructor

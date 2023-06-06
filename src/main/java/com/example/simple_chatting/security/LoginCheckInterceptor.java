@@ -1,11 +1,11 @@
-package com.example.simple_chatting.web.interceptor;
+package com.example.simple_chatting.security;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import static com.example.simple_chatting.security.session.SessionConst.USER_SESSION_KEY;
+import static com.example.simple_chatting.security.SessionConst.USER_SESSION_KEY;
 
 public class LoginCheckInterceptor implements HandlerInterceptor {
 
