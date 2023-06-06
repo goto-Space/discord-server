@@ -32,7 +32,7 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         HttpSession session = request.getSession(false);
         if (session == null) {
-            return null;
+            throw new IllegalStateException("현재 로그인되지 않은 상태입니다.");
         }
         return session.getAttribute(SessionConst.USER_SESSION_KEY);
     }

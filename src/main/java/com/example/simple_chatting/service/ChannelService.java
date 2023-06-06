@@ -23,7 +23,7 @@ public class ChannelService {
         User user = validateAndFindUser(accessUser);
 
         Channel createdChannel = channelFactory.makeChannel(request, accessUser);
-        createdChannel.addUser(user);
+        createdChannel.join(user);
 
         Channel savedChannel = channelRepository.save(createdChannel);
         return savedChannel.getId();
@@ -32,6 +32,13 @@ public class ChannelService {
     public void deleteById(Long id, AccessUser accessUser) {
         validateToDelete(id, accessUser);
         channelRepository.deleteById(id);
+    }
+
+    public void join(AccessUser accessUser, Long channelId) {
+        checkExist(channelId);
+        User user = validateAndFindUser(accessUser);
+        Channel channel = channelRepository.findById(channelId);
+        channel.join(user);
     }
 
     private void validateDuplicateChannel(CreateChannelRequest request) {
