@@ -36,7 +36,7 @@ public class ChannelService {
     }
 
     public void join(JoinChannelRequest request, AccessUser accessUser, Long channelId) {
-        checkExist(channelId);
+        checkChannelExist(channelId);
         User user = validateAndFindUser(accessUser);
         Channel channel = channelRepository.findById(channelId);
         validateInvitationCode(channel, request);
@@ -44,7 +44,7 @@ public class ChannelService {
     }
 
     public String getInvitationCode(AccessUser accessUser, Long channelId) {
-        checkExist(channelId);
+        checkChannelExist(channelId);
         User requestUser = validateAndFindUser(accessUser);
         Channel channel = channelRepository.findById(channelId);
         validateChannelUser(channel, requestUser);
@@ -66,11 +66,11 @@ public class ChannelService {
     }
 
     private void validateToDelete(Long id, AccessUser accessUser) {
-        Channel findChannel = checkExist(id);
+        Channel findChannel = checkChannelExist(id);
         checkHost(findChannel, accessUser);
     }
 
-    private Channel checkExist(Long id) {
+    private Channel checkChannelExist(Long id) {
         Channel findChannel = channelRepository.findById(id);
         if (findChannel == null) {
             throw new IllegalArgumentException("존재하지 않는 채널은 삭제할 수 없습니다.");
