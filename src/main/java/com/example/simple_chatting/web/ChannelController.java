@@ -3,6 +3,7 @@ package com.example.simple_chatting.web;
 import com.example.simple_chatting.dto.channel.CreateChannelRequest;
 import com.example.simple_chatting.dto.channel.CreateChannelResponse;
 import com.example.simple_chatting.dto.channel.GetChannelInvitationCodeResponse;
+import com.example.simple_chatting.dto.channel.JoinChannelRequest;
 import com.example.simple_chatting.security.AccessUser;
 import com.example.simple_chatting.security.LoginUser;
 import com.example.simple_chatting.service.ChannelService;
@@ -45,8 +46,10 @@ public class ChannelController {
     @PutMapping("/{channelId}")
     public ResponseEntity<HttpStatus> joinChannel(
         @LoginUser AccessUser accessUser,
-        @PathVariable Long channelId) {
-        channelService.join(accessUser, channelId);
+        @PathVariable Long channelId,
+        @Valid @RequestBody JoinChannelRequest request
+    ) {
+        channelService.join(request, accessUser, channelId);
         return ResponseEntity.ok().build();
     }
 

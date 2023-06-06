@@ -4,6 +4,7 @@ import com.example.simple_chatting.domain.channel.Channel;
 import com.example.simple_chatting.domain.channel.ChannelFactory;
 import com.example.simple_chatting.domain.user.User;
 import com.example.simple_chatting.dto.channel.CreateChannelRequest;
+import com.example.simple_chatting.dto.channel.JoinChannelRequest;
 import com.example.simple_chatting.repository.ChannelRepository;
 import com.example.simple_chatting.repository.UserRepository;
 import com.example.simple_chatting.security.AccessUser;
@@ -34,10 +35,11 @@ public class ChannelService {
         channelRepository.deleteById(id);
     }
 
-    public void join(AccessUser accessUser, Long channelId) {
+    public void join(JoinChannelRequest request, AccessUser accessUser, Long channelId) {
         checkExist(channelId);
         User user = validateAndFindUser(accessUser);
         Channel channel = channelRepository.findById(channelId);
+        validateInvitationCode(channel, request);
         channel.join(user);
     }
 
@@ -79,6 +81,12 @@ public class ChannelService {
     private void checkHost(Channel channel, AccessUser accessUser) {
         if (!channel.getHostUserLoginId().equals(accessUser.getLoginId())) {
             throw new IllegalArgumentException("방장이 아닌 사람은 채널을 삭제할 수 없습니다.");
+        }
+    }
+
+    private void validateInvitationCode(Channel channel, JoinChannelRequest request) {
+        if (!channel.matchInvitationCode(request.getInvitationCode())) {
+            throw new IllegalArgumentException("채널 코드가 일치하지 않습니다.");
         }
     }
 

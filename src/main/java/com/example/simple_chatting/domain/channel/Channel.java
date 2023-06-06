@@ -44,6 +44,10 @@ public abstract class Channel {
             .anyMatch(channelUser -> channelUser.equals(user));
     }
 
+    public boolean matchInvitationCode(String invitationCode) {
+        return this.invitationCode.equals(invitationCode);
+    }
+
     public void changeHost(User user) {
         this.hostUserLoginId = user.getLoginId();
     }
