@@ -43,8 +43,9 @@ public class ChannelService {
 
     public String getInvitationCode(AccessUser accessUser, Long channelId) {
         checkExist(channelId);
-        User user = validateAndFindUser(accessUser);
+        User requestUser = validateAndFindUser(accessUser);
         Channel channel = channelRepository.findById(channelId);
+        validateChannelUser(channel, requestUser);
         return channel.getInvitationCode();
     }
 
@@ -78,6 +79,12 @@ public class ChannelService {
     private void checkHost(Channel channel, AccessUser accessUser) {
         if (!channel.getHostUserLoginId().equals(accessUser.getLoginId())) {
             throw new IllegalArgumentException("방장이 아닌 사람은 채널을 삭제할 수 없습니다.");
+        }
+    }
+
+    private void validateChannelUser(Channel channel, User requestUser) {
+        if (!channel.isUserIn(requestUser)) {
+            throw new IllegalStateException("현재 채널에 속해있는 사용자만 채널 코드를 볼 수 있습니다.");
         }
     }
 }

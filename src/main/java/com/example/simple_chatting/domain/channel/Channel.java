@@ -39,6 +39,11 @@ public abstract class Channel {
         users.add(user);
     }
 
+    public boolean isUserIn(User user){
+        return users.stream()
+            .anyMatch(channelUser -> channelUser.equals(user));
+    }
+
     public void changeHost(User user) {
         this.hostUserLoginId = user.getLoginId();
     }
