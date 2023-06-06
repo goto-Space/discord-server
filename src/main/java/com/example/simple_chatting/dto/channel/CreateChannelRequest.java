@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class CreateChannelRequest {
-    @NotEmpty
     private ChannelType type;
     @NotEmpty
     private String name;

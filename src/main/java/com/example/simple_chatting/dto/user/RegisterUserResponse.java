@@ -5,10 +5,10 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 public class RegisterUserResponse {
-    long userId;
+    Long userId;
 
     @Builder
-    public RegisterUserResponse(long userId) {
+    public RegisterUserResponse(Long userId) {
         this.userId = userId;
     }
 }
