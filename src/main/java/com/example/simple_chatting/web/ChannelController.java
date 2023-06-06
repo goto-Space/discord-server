@@ -63,4 +63,13 @@ public class ChannelController {
             .invitationCode(invitationCode)
             .build();
     }
+
+    @PutMapping("/{channelId}/leave")
+    public ResponseEntity<HttpStatus> leaveChannel(
+        @LoginUser AccessUser accessUser,
+        @PathVariable Long channelId
+    ) {
+        channelService.leave(accessUser, channelId);
+        return ResponseEntity.ok().build();
+    }
 }

@@ -40,19 +40,32 @@ public abstract class Channel {
     }
 
     public boolean isUserIn(User user){
-        return users.stream()
-            .anyMatch(channelUser -> channelUser.equals(user));
+        return users.contains(user);
     }
 
     public boolean matchInvitationCode(String invitationCode) {
         return this.invitationCode.equals(invitationCode);
     }
 
-    public void changeHost(User user) {
-        this.hostUserLoginId = user.getLoginId();
+    public void leaveUser(User user) {
+        users.remove(user);
+
+        if (this.hostUserLoginId.equals(user.getLoginId())) {
+            changeHost();
+        }
+    }
+
+    public boolean isLeftUser() {
+        return !users.isEmpty();
     }
 
     private boolean isEqualOrOverThanMaxUser() {
         return users.size() >= MAX_USER;
+    }
+
+    private void changeHost() {
+        if (!users.isEmpty()) {
+            this.hostUserLoginId = users.get(0).getLoginId();
+        }
     }
 }

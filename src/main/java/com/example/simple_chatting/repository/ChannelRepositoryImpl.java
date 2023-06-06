@@ -17,7 +17,9 @@ public class ChannelRepositoryImpl implements ChannelRepository {
 
     @Override
     public Channel save(Channel channel) {
-        channel.setId(sequenceNumber.incrementAndGet());
+        if (channel.getId() == null) {
+            channel.setId(sequenceNumber.incrementAndGet());
+        }
         store.put(channel.getId(), channel);
         return channel;
     }
