@@ -1,4 +1,4 @@
-package com.example.simple_chatting.dto.chatRoom;
+package com.example.simple_chatting.dto.channel;
 
 import lombok.Builder;
 import lombok.Getter;

@@ -4,8 +4,10 @@ import com.example.simple_chatting.dto.user.LoginUserRequest;
 import com.example.simple_chatting.dto.user.RegisterUserRequest;
 import com.example.simple_chatting.dto.user.RegisterUserResponse;
 import com.example.simple_chatting.security.AccessUser;
-import com.example.simple_chatting.security.UserSessionManager;
+import com.example.simple_chatting.security.SessionConst;
 import com.example.simple_chatting.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private final UserService userService;
-    private final UserSessionManager userSessionManager;
 
     @PostMapping("/register")
     public RegisterUserResponse signUp(@Valid @RequestBody RegisterUserRequest request) {
@@ -30,9 +31,22 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<HttpStatus> login(@Valid @RequestBody LoginUserRequest request) {
+    public ResponseEntity<HttpStatus> login(@Valid @RequestBody LoginUserRequest request, HttpServletRequest httpServletRequest) {
         AccessUser accessUser = userService.login(request);
-        userSessionManager.saveUser(accessUser);
+
+        HttpSession session = httpServletRequest.getSession();
+        session.setAttribute(SessionConst.USER_SESSION_KEY, accessUser);
+
+        return ResponseEntity.ok(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<HttpStatus> logout(HttpServletRequest httpServletRequest) {
+        HttpSession session = httpServletRequest.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+
         return ResponseEntity.ok(HttpStatus.NO_CONTENT);
     }
 }

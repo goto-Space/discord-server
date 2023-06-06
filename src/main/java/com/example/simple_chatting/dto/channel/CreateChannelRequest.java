@@ -1,4 +1,4 @@
-package com.example.simple_chatting.dto.chatRoom;
+package com.example.simple_chatting.dto.channel;
 
 import com.example.simple_chatting.common.ChannelType;
 import jakarta.validation.constraints.NotEmpty;
