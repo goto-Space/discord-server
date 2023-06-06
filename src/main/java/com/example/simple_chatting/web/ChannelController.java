@@ -1,7 +1,7 @@
 package com.example.simple_chatting.web;
 
-import com.example.simple_chatting.dto.chatRoom.CreateChannelRequest;
-import com.example.simple_chatting.dto.chatRoom.CreateChannelResponse;
+import com.example.simple_chatting.dto.channel.CreateChannelRequest;
+import com.example.simple_chatting.dto.channel.CreateChannelResponse;
 import com.example.simple_chatting.security.AccessUser;
 import com.example.simple_chatting.security.LoginUser;
 import com.example.simple_chatting.service.ChannelService;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController("/channels")
+@RestController("/api/channels/")
 @RequiredArgsConstructor
 public class ChannelController {
     private final ChannelService channelService;
