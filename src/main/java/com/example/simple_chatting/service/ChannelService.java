@@ -66,11 +66,6 @@ public class ChannelService {
         }
     }
 
-    public ChannelType getChannelType(Long channelId) {
-        Channel channel = channelRepository.findById(channelId);
-        return channel.getType();
-    }
-
     public boolean isChannel(Long channelId) {
         Channel findChannel = channelRepository.findById(channelId);
         if (findChannel == null) {
@@ -80,7 +75,7 @@ public class ChannelService {
     }
 
     private void validateDuplicateChannel(CreateChannelRequest request) {
-        Optional<Channel> findChannel = channelRepository.findByTypeAndName(request.getType(), request.getName());
+        Optional<Channel> findChannel = channelRepository.findByTypeAndName(request.getChannelType(), request.getName());
         if (!findChannel.isEmpty()) {
             throw new IllegalArgumentException("같은 채널 내에 동일한 이름을 가지는 다른 채널이 이미 존재합니다.");
         }

@@ -5,6 +5,7 @@ import com.example.simple_chatting.dto.channel.CreateChannelRequest;
 import com.example.simple_chatting.dto.channel.CreateChannelResponse;
 import com.example.simple_chatting.dto.channel.GetChannelInvitationCodeResponse;
 import com.example.simple_chatting.dto.channel.JoinChannelRequest;
+import com.example.simple_chatting.dto.channel.LeaveChannelRequest;
 import com.example.simple_chatting.security.AccessUser;
 import com.example.simple_chatting.security.LoginUser;
 import com.example.simple_chatting.service.ChannelService;
@@ -39,7 +40,7 @@ public class ChannelController {
         @Valid @RequestBody CreateChannelRequest request) {
         Long channelId = channelService.createChannel(request, accessUser);
 
-        if (ChannelType.TEXT.equals(request.getType())) {
+        if (ChannelType.TEXT.equals(request.getChannelType())) {
             textChatService.sendEnterTextMessage(channelId, accessUser.getUserName());
         }
 
@@ -69,9 +70,8 @@ public class ChannelController {
         @Valid @RequestBody JoinChannelRequest request
     ) {
         channelService.join(request, accessUser, channelId);
-        ChannelType channelType = channelService.getChannelType(channelId);
 
-        if (ChannelType.TEXT.equals(channelType)) {
+        if (ChannelType.TEXT.equals(request.getChannelType())) {
             textChatService.sendEnterTextMessage(channelId, accessUser.getUserName());
         }
 
@@ -98,10 +98,11 @@ public class ChannelController {
     @PutMapping("/{channelId}/leave")
     public ResponseEntity<HttpStatus> leaveChannel(
         @LoginUser AccessUser accessUser,
-        @PathVariable Long channelId
+        @PathVariable Long channelId,
+        @RequestBody LeaveChannelRequest request
     ) {
         channelService.leave(accessUser, channelId);
-        if (channelService.isChannel(channelId) && channelService.getChannelType(channelId).equals(ChannelType.TEXT)) {
+        if (channelService.isChannel(channelId) && ChannelType.TEXT.equals(request.getChannelType())) {
             textChatService.sendLeaveTextMessage(channelId, accessUser.getUserName());
         }
 

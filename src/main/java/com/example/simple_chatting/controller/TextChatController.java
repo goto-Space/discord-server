@@ -18,8 +18,7 @@ public class TextChatController {
 
     @MessageMapping("/chat/text")
     public void sendMessage(@Payload TextMessageRequest request) {
-        ChannelType channelType = channelService.getChannelType(request.getChannelId());
-        validateTextChannel(channelType);
+        validateTextChannel(request.getChannelType());
         textChatService.sendTextMessage(request);
     }
 
