@@ -1,4 +1,4 @@
-package com.example.simple_chatting.web;
+package com.example.simple_chatting.controller;
 
 import com.example.simple_chatting.common.ChannelType;
 import com.example.simple_chatting.dto.textMessage.TextMessageRequest;
