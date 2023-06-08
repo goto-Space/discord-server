@@ -15,7 +15,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     public Long signUp(SignUpUserRequest request) {
-        validateDuplicateUser(request.getLoginId(), request.getPassword());
+        validateDuplicateUser(request);
         return userRepository.save(request.toEntity()).getId();
     }
 
@@ -26,8 +26,8 @@ public class UserService {
         return AccessUser.of(user.getLoginId(), user.getName());
     }
 
-    private void validateDuplicateUser(String loginId, String password) {
-        Optional<User> findUser = userRepository.findByLoginIdAndPassword(loginId, password);
+    private void validateDuplicateUser(SignUpUserRequest request) {
+        Optional<User> findUser = userRepository.findByLoginIdAndPassword(request.getLoginId(), request.getPassword());
         if (!findUser.isEmpty()) {
             throw new IllegalStateException("이미 존재하는 아이디와 비밀번호입니다. 다른 아이디와 비밀번호를 입력해주세요.");
         }

@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/users/")
 @RequiredArgsConstructor
 public class UserController {
-
     private final UserService userService;
 
     @Operation(
@@ -31,6 +30,7 @@ public class UserController {
     @PostMapping("/signup")
     public SignUpUserResponse signUp(@Valid @RequestBody SignUpUserRequest request) {
         Long userId = userService.signUp(request);
+
         return new SignUpUserResponse().builder()
             .userId(userId)
             .build();
@@ -40,13 +40,16 @@ public class UserController {
         summary = "사용자 로그인"
     )
     @PostMapping("/login")
-    public ResponseEntity<HttpStatus> login(@Valid @RequestBody LoginUserRequest request, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<HttpStatus> login(
+        @Valid @RequestBody LoginUserRequest request,
+        HttpServletRequest httpServletRequest
+    ) {
         AccessUser accessUser = userService.login(request);
 
         HttpSession session = httpServletRequest.getSession();
         session.setAttribute(SessionConst.USER_SESSION_KEY, accessUser);
 
-        return ResponseEntity.ok(HttpStatus.NO_CONTENT);
+        return ResponseEntity.ok(HttpStatus.CREATED);
     }
 
     @Operation(
