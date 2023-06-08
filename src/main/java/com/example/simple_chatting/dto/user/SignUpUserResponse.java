@@ -6,11 +6,11 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class RegisterUserResponse {
+public class SignUpUserResponse {
     Long userId;
 
     @Builder
-    public RegisterUserResponse(Long userId) {
+    public SignUpUserResponse(Long userId) {
         this.userId = userId;
     }
 }

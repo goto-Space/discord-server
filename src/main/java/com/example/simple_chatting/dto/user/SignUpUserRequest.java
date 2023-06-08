@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class RegisterUserRequest {
+public class SignUpUserRequest {
     @NotEmpty
     private String userName;
     @NotEmpty
@@ -17,7 +17,7 @@ public class RegisterUserRequest {
     private String password;
 
     @Builder
-    public RegisterUserRequest(String userName, String loginId, String password) {
+    public SignUpUserRequest(String userName, String loginId, String password) {
         this.userName = userName;
         this.loginId = loginId;
         this.password = password;

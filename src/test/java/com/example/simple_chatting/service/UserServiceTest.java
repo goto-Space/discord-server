@@ -1,7 +1,7 @@
 package com.example.simple_chatting.service;
 
 import com.example.simple_chatting.dto.user.LoginUserRequest;
-import com.example.simple_chatting.dto.user.RegisterUserRequest;
+import com.example.simple_chatting.dto.user.SignUpUserRequest;
 import com.example.simple_chatting.repository.UserRepository;
 import com.example.simple_chatting.security.AccessUser;
 import org.junit.jupiter.api.AfterEach;
@@ -34,19 +34,19 @@ class UserServiceTest {
         String name1 = "shw";
         String loginId1 = "network-protocol";
         String password1 = "201800";
-        RegisterUserRequest request1 = new RegisterUserRequest(name1, loginId1, password1);
+        SignUpUserRequest request1 = new SignUpUserRequest(name1, loginId1, password1);
 
         String name2 = "bj";
         String loginId2 = "network-protocol";
         String password2 = "201800";
-        RegisterUserRequest request2 = new RegisterUserRequest(name2, loginId2, password2);
+        SignUpUserRequest request2 = new SignUpUserRequest(name2, loginId2, password2);
 
         //when
-        userService.join(request1);
+        userService.signUp(request1);
 
         //then
         assertThrows(IllegalStateException.class, () -> {
-            userService.join(request2);
+            userService.signUp(request2);
         });
     }
 
@@ -57,11 +57,11 @@ class UserServiceTest {
         String name = "sonny";
         String loginId = "network-protocol";
         String password = "2018";
-        RegisterUserRequest registerUserRequest = new RegisterUserRequest(name, loginId, password);
+        SignUpUserRequest signUpUserRequest = new SignUpUserRequest(name, loginId, password);
         LoginUserRequest loginUserRequest = new LoginUserRequest(loginId, password);
 
         //when
-        userService.join(registerUserRequest);
+        userService.signUp(signUpUserRequest);
         AccessUser accessUser = userService.login(loginUserRequest);
 
         //then

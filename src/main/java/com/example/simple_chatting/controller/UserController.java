@@ -1,8 +1,8 @@
 package com.example.simple_chatting.controller;
 
 import com.example.simple_chatting.dto.user.LoginUserRequest;
-import com.example.simple_chatting.dto.user.RegisterUserRequest;
-import com.example.simple_chatting.dto.user.RegisterUserResponse;
+import com.example.simple_chatting.dto.user.SignUpUserRequest;
+import com.example.simple_chatting.dto.user.SignUpUserResponse;
 import com.example.simple_chatting.security.AccessUser;
 import com.example.simple_chatting.security.SessionConst;
 import com.example.simple_chatting.service.UserService;
@@ -28,10 +28,10 @@ public class UserController {
     @Operation(
         summary = "사용자 회원가입"
     )
-    @PostMapping("/register")
-    public RegisterUserResponse signUp(@Valid @RequestBody RegisterUserRequest request) {
-        Long userId = userService.join(request);
-        return new RegisterUserResponse().builder()
+    @PostMapping("/signup")
+    public SignUpUserResponse signUp(@Valid @RequestBody SignUpUserRequest request) {
+        Long userId = userService.signUp(request);
+        return new SignUpUserResponse().builder()
             .userId(userId)
             .build();
     }
