@@ -2,20 +2,13 @@ package com.example.simple_chatting.dto.channel;
 
 import com.example.simple_chatting.common.ChannelType;
 import jakarta.validation.constraints.NotEmpty;
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
+@AllArgsConstructor
 public class CreateChannelRequest {
     private ChannelType channelType;
     @NotEmpty
     private String name;
-
-    @Builder
-    public CreateChannelRequest(ChannelType channelType, String name) {
-        this.channelType = channelType;
-        this.name = name;
-    }
 }

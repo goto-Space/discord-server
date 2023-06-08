@@ -1,16 +1,10 @@
 package com.example.simple_chatting.dto.channel;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
+@AllArgsConstructor
 public class CreateChannelResponse {
     private Long channelId;
-
-    @Builder
-    public CreateChannelResponse(Long channelId) {
-        this.channelId = channelId;
-    }
 }

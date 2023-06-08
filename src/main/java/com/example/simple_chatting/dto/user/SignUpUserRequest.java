@@ -2,12 +2,11 @@ package com.example.simple_chatting.dto.user;
 
 import com.example.simple_chatting.domain.user.User;
 import jakarta.validation.constraints.NotEmpty;
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
+@AllArgsConstructor
 public class SignUpUserRequest {
     @NotEmpty
     private String userName;
@@ -15,13 +14,6 @@ public class SignUpUserRequest {
     private String loginId;
     @NotEmpty
     private String password;
-
-    @Builder
-    public SignUpUserRequest(String userName, String loginId, String password) {
-        this.userName = userName;
-        this.loginId = loginId;
-        this.password = password;
-    }
 
     public User toEntity() {
         return User.builder()
