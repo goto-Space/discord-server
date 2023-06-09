@@ -3,7 +3,7 @@ package com.example.simple_chatting.controller;
 import com.example.simple_chatting.dto.user.LoginUserRequest;
 import com.example.simple_chatting.dto.user.SignUpUserRequest;
 import com.example.simple_chatting.dto.user.SignUpUserResponse;
-import com.example.simple_chatting.security.AccessUser;
+import com.example.simple_chatting.security.LoginUser;
 import com.example.simple_chatting.security.SessionConst;
 import com.example.simple_chatting.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -45,8 +45,8 @@ public class UserController {
         @RequestBody @Valid LoginUserRequest request,
         HttpSession session
     ) {
-        AccessUser accessUser = userService.login(request);
-        session.setAttribute(SessionConst.USER_SESSION_KEY, accessUser);
+        LoginUser loginUser = userService.login(request);
+        session.setAttribute(SessionConst.USER_SESSION_KEY, loginUser);
         return ResponseEntity.ok().build();
     }
 

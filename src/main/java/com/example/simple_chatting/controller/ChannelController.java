@@ -6,7 +6,7 @@ import com.example.simple_chatting.dto.channel.CreateChannelResponse;
 import com.example.simple_chatting.dto.channel.GetChannelInvitationCodeResponse;
 import com.example.simple_chatting.dto.channel.JoinChannelRequest;
 import com.example.simple_chatting.dto.channel.LeaveChannelRequest;
-import com.example.simple_chatting.security.AccessUser;
+import com.example.simple_chatting.security.Authentication;
 import com.example.simple_chatting.security.LoginUser;
 import com.example.simple_chatting.service.ChannelService;
 import com.example.simple_chatting.service.TextChatService;
@@ -36,12 +36,12 @@ public class ChannelController {
     @PostMapping
     public ResponseEntity<CreateChannelResponse> createChannel(
         @RequestBody @Valid CreateChannelRequest request,
-        @LoginUser AccessUser accessUser
+        @Authentication LoginUser loginUser
     ) {
-        CreateChannelResponse response = channelService.create(request, accessUser.getId());
+        CreateChannelResponse response = channelService.create(request, loginUser.getId());
 
         if (ChannelType.TEXT.equals(request.getChannelType())) {
-            textChatService.sendEnterTextMessage(response.getChannelId(), accessUser.getName());
+            textChatService.sendEnterTextMessage(response.getChannelId(), loginUser.getName());
         }
 
         return ResponseEntity
@@ -56,9 +56,9 @@ public class ChannelController {
     @DeleteMapping("/{channelId}")
     public ResponseEntity<Void> deleteChannel(
         @PathVariable Long channelId,
-        @LoginUser AccessUser accessUser
+        @Authentication LoginUser loginUser
     ) {
-        channelService.deleteById(channelId, accessUser.getId());
+        channelService.deleteById(channelId, loginUser.getId());
         return ResponseEntity.noContent().build();
     }
 
@@ -69,12 +69,12 @@ public class ChannelController {
     public ResponseEntity<Void> joinChannel(
         @PathVariable Long channelId,
         @RequestBody @Valid JoinChannelRequest request,
-        @LoginUser AccessUser accessUser
+        @Authentication LoginUser loginUser
     ) {
-        channelService.join(request, channelId, accessUser.getId());
+        channelService.join(request, channelId, loginUser.getId());
 
         if (ChannelType.TEXT.equals(request.getChannelType())) {
-            textChatService.sendEnterTextMessage(channelId, accessUser.getName());
+            textChatService.sendEnterTextMessage(channelId, loginUser.getName());
         }
 
         return ResponseEntity.ok().build();
@@ -86,9 +86,9 @@ public class ChannelController {
     @GetMapping("/{channelId}/invitation-code")
     public ResponseEntity<GetChannelInvitationCodeResponse> getInvitationCode(
         @PathVariable Long channelId,
-        @LoginUser AccessUser accessUser
+        @Authentication LoginUser loginUser
     ) {
-        GetChannelInvitationCodeResponse response = channelService.getInvitationCode(channelId, accessUser.getId());
+        GetChannelInvitationCodeResponse response = channelService.getInvitationCode(channelId, loginUser.getId());
         return ResponseEntity.ok().body(response);
     }
 
@@ -99,11 +99,11 @@ public class ChannelController {
     public ResponseEntity<Void> releaseUser(
         @PathVariable Long channelId,
         @RequestBody LeaveChannelRequest request,
-        @LoginUser AccessUser accessUser
+        @Authentication LoginUser loginUser
     ) {
-        channelService.releaseUser(channelId, accessUser.getId());
+        channelService.releaseUser(channelId, loginUser.getId());
         if (channelService.existsById(channelId) && ChannelType.TEXT.equals(request.getChannelType())) {
-            textChatService.sendLeaveTextMessage(channelId, accessUser.getName());
+            textChatService.sendLeaveTextMessage(channelId, loginUser.getName());
         }
 
         return ResponseEntity.ok().build();
