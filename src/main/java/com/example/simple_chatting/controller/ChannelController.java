@@ -12,14 +12,13 @@ import com.example.simple_chatting.service.ChannelService;
 import com.example.simple_chatting.service.TextChatService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import java.net.URI;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,17 +34,18 @@ public class ChannelController {
         summary = "채널 생성"
     )
     @PostMapping
-    public CreateChannelResponse createChannel(
-        @LoginUser AccessUser accessUser,
-        @Valid @RequestBody CreateChannelRequest request) {
-        Long channelId = channelService.createChannel(request, accessUser);
+    public ResponseEntity<Void> createChannel(
+        @RequestBody @Valid CreateChannelRequest request,
+        @LoginUser AccessUser accessUser
+    ) {
+        CreateChannelResponse response = channelService.create(request, accessUser.getId());
 
         if (ChannelType.TEXT.equals(request.getChannelType())) {
-            textChatService.sendEnterTextMessage(channelId, accessUser.getUserName());
+            textChatService.sendEnterTextMessage(response.getChannelId(), accessUser.getName());
         }
 
-        return new CreateChannelResponse().builder()
-            .channelId(channelId)
+        return ResponseEntity
+            .created(URI.create("/api/channels/" + response.getChannelId()))
             .build();
     }
 
@@ -53,26 +53,27 @@ public class ChannelController {
         summary = "채널 삭제"
     )
     @DeleteMapping("/{channelId}")
-    public ResponseEntity<HttpStatus> deleteChannel(
-        @LoginUser AccessUser accessUser,
-        @PathVariable Long channelId) {
-        channelService.deleteById(channelId, accessUser);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Void> deleteChannel(
+        @PathVariable Long channelId,
+        @LoginUser AccessUser accessUser
+    ) {
+        channelService.deleteById(channelId, accessUser.getId());
+        return ResponseEntity.noContent().build();
     }
 
     @Operation(
         summary = "채널 입장"
     )
-    @PutMapping("/{channelId}")
-    public ResponseEntity<HttpStatus> joinChannel(
-        @LoginUser AccessUser accessUser,
+    @PostMapping("/{channelId}/join")
+    public ResponseEntity<Void> joinChannel(
         @PathVariable Long channelId,
-        @Valid @RequestBody JoinChannelRequest request
+        @RequestBody @Valid JoinChannelRequest request,
+        @LoginUser AccessUser accessUser
     ) {
-        channelService.join(request, accessUser, channelId);
+        channelService.join(request, channelId, accessUser.getId());
 
         if (ChannelType.TEXT.equals(request.getChannelType())) {
-            textChatService.sendEnterTextMessage(channelId, accessUser.getUserName());
+            textChatService.sendEnterTextMessage(channelId, accessUser.getName());
         }
 
         return ResponseEntity.ok().build();
@@ -81,29 +82,27 @@ public class ChannelController {
     @Operation(
         summary = "채널 초대 코드 조회"
     )
-    @GetMapping("/{channelId}/invitationCode")
-    public GetChannelInvitationCodeResponse getInvitationCode(
-        @LoginUser AccessUser accessUser,
-        @PathVariable Long channelId) {
-        String invitationCode = channelService.getInvitationCode(accessUser, channelId);
-
-        return new GetChannelInvitationCodeResponse().builder()
-            .invitationCode(invitationCode)
-            .build();
+    @GetMapping("/{channelId}/invitation-code")
+    public ResponseEntity<GetChannelInvitationCodeResponse> getInvitationCode(
+        @PathVariable Long channelId,
+        @LoginUser AccessUser accessUser
+    ) {
+        GetChannelInvitationCodeResponse response = channelService.getInvitationCode(channelId, accessUser.getId());
+        return ResponseEntity.ok().body(response);
     }
 
     @Operation(
-        summary = "채널 퇴장"
+        summary = "사용자 채널 퇴장"
     )
-    @PutMapping("/{channelId}/leave")
-    public ResponseEntity<HttpStatus> leaveChannel(
-        @LoginUser AccessUser accessUser,
+    @PostMapping("/{channelId}/release-user")
+    public ResponseEntity<Void> releaseUser(
         @PathVariable Long channelId,
-        @RequestBody LeaveChannelRequest request
+        @RequestBody LeaveChannelRequest request,
+        @LoginUser AccessUser accessUser
     ) {
-        channelService.leave(accessUser, channelId);
-        if (channelService.isChannel(channelId) && ChannelType.TEXT.equals(request.getChannelType())) {
-            textChatService.sendLeaveTextMessage(channelId, accessUser.getUserName());
+        channelService.releaseUser(channelId, accessUser.getId());
+        if (channelService.exist(channelId) && ChannelType.TEXT.equals(request.getChannelType())) {
+            textChatService.sendLeaveTextMessage(channelId, accessUser.getName());
         }
 
         return ResponseEntity.ok().build();

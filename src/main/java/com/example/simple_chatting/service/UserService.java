@@ -17,7 +17,8 @@ public class UserService {
 
     public SignUpUserResponse signUp(SignUpUserRequest request) {
         validateDuplicateLoginIdAndPasswordPair(request);
-        return new SignUpUserResponse(userRepository.save(request.toEntity()).getId());
+        User savedUser = userRepository.save(request.toEntity());
+        return SignUpUserResponse.of(savedUser);
     }
 
     public AccessUser login(LoginUserRequest request) {

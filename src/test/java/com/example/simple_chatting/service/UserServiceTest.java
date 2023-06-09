@@ -65,7 +65,7 @@ class UserServiceTest {
         AccessUser accessUser = userService.login(loginUserRequest);
 
         //then
-        assertEquals(loginId, accessUser.getLoginId());
+        assertEquals(loginId, accessUser.getId());
     }
 
 //    @Test

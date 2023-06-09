@@ -1,19 +1,5 @@
 package com.example.simple_chatting.service;
 
-import com.example.simple_chatting.common.ChannelType;
-import com.example.simple_chatting.dto.channel.CreateChannelRequest;
-import com.example.simple_chatting.dto.user.LoginUserRequest;
-import com.example.simple_chatting.dto.user.RegisterUserRequest;
-import com.example.simple_chatting.repository.ChannelRepository;
-import com.example.simple_chatting.repository.UserRepository;
-import com.example.simple_chatting.security.AccessUser;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;

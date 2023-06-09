@@ -9,4 +9,8 @@ import lombok.Getter;
 public class GetChannelInvitationCodeResponse {
     @NotEmpty
     private String invitationCode;
+
+    public static GetChannelInvitationCodeResponse of(String invitationCode) {
+        return new GetChannelInvitationCodeResponse(invitationCode);
+    }
 }

@@ -12,8 +12,13 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class ChannelRepositoryImpl implements ChannelRepository {
-    private static Map<Long, Channel> store = new ConcurrentHashMap<>();
-    private static AtomicLong sequenceNumber = new AtomicLong();
+    private static final Map<Long, Channel> store = new ConcurrentHashMap<>();
+    private static final AtomicLong sequenceNumber = new AtomicLong();
+
+    @Override
+    public boolean existsById(Long id) {
+        return store.containsKey(id);
+    }
 
     @Override
     public Channel save(Channel channel) {
