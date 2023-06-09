@@ -69,7 +69,7 @@ public abstract class Channel {
 
     private void changeHost() {
         if (!users.isEmpty()) {
-            this.hostUserLoginId = users.get(0).getLoginId();
+            this.hostUserId = users.get(0).getId();
         }
     }
 }
