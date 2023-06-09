@@ -33,6 +33,3 @@ rebel.xml
 *.lock
 *.probe
 *.bin
-*.bin
-*.class
-*.lock
