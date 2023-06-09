@@ -28,7 +28,6 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
         ModelAndViewContainer mavContainer,
         NativeWebRequest webRequest,
         WebDataBinderFactory binderFactory) throws Exception {
-
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         HttpSession session = request.getSession(false);
         if (session == null) {
