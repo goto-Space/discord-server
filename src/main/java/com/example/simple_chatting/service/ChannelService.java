@@ -68,7 +68,7 @@ public class ChannelService {
         }
     }
 
-    public boolean exist(Long channelId) {
+    public boolean existsById(Long channelId) {
         return channelRepository.existsById(channelId);
     }
 
