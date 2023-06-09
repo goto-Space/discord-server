@@ -28,13 +28,13 @@ public class UserController {
         summary = "사용자 회원가입"
     )
     @PostMapping("/signup")
-    public ResponseEntity<Void> signUp(
+    public ResponseEntity<SignUpUserResponse> signUp(
         @RequestBody @Valid SignUpUserRequest request
     ) {
         SignUpUserResponse response = userService.signUp(request);
         return ResponseEntity
             .created(URI.create("/api/users/" + response.getUserId()))
-            .build();
+            .body(response);
     }
 
     @Operation(

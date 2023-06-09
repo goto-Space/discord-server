@@ -28,11 +28,5 @@ rebel.xml
  
 # Gradle
 .gradle
-/build/
+build
 .gradletasknamecache
-*.lock
-*.probe
-*.bin
-*.bin
-*.class
-*.lock

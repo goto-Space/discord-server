@@ -34,7 +34,7 @@ public class ChannelController {
         summary = "채널 생성"
     )
     @PostMapping
-    public ResponseEntity<Void> createChannel(
+    public ResponseEntity<CreateChannelResponse> createChannel(
         @RequestBody @Valid CreateChannelRequest request,
         @LoginUser AccessUser accessUser
     ) {
@@ -46,7 +46,8 @@ public class ChannelController {
 
         return ResponseEntity
             .created(URI.create("/api/channels/" + response.getChannelId()))
-            .build();
+            .body(response);
+
     }
 
     @Operation(
