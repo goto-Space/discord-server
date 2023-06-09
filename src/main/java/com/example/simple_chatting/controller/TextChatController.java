@@ -1,4 +1,4 @@
-package com.example.simple_chatting.web;
+package com.example.simple_chatting.controller;
 
 import com.example.simple_chatting.common.ChannelType;
 import com.example.simple_chatting.dto.textMessage.TextMessageRequest;
@@ -18,8 +18,7 @@ public class TextChatController {
 
     @MessageMapping("/chat/text")
     public void sendMessage(@Payload TextMessageRequest request) {
-        ChannelType channelType = channelService.getChannelType(request.getChannelId());
-        validateTextChannel(channelType);
+        validateTextChannel(request.getChannelType());
         textChatService.sendTextMessage(request);
     }
 

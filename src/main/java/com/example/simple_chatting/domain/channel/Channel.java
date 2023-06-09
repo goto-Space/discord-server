@@ -17,14 +17,14 @@ public abstract class Channel {
     private ChannelType type;
     private String name;
     private List<User> users;
-    private String hostUserLoginId;
+    private Long hostUserId;
     private String invitationCode;
 
-    public Channel(ChannelType type, String name, String hostUserLoginId) {
+    public Channel(ChannelType type, String name, Long hostUserId) {
         this.type = type;
         this.name = name;
         this.users = new LinkedList<>();
-        this.hostUserLoginId = hostUserLoginId;
+        this.hostUserId = hostUserId;
         this.invitationCode = UUID.randomUUID().toString();
     }
 
@@ -39,24 +39,28 @@ public abstract class Channel {
         users.add(user);
     }
 
-    public boolean isUserIn(User user){
+    public boolean contains(User user) {
         return users.contains(user);
     }
 
-    public boolean matchInvitationCode(String invitationCode) {
+    public boolean match(String invitationCode) {
         return this.invitationCode.equals(invitationCode);
     }
 
-    public void leaveUser(User user) {
+    public void release(User user) {
         users.remove(user);
 
-        if (this.hostUserLoginId.equals(user.getLoginId())) {
+        if (this.hostUserId == user.getId()) {
             changeHost();
         }
     }
 
     public boolean isLeftUser() {
-        return !users.isEmpty();
+        return getNumberOfUsersIn() > 0;
+    }
+
+    public Integer getNumberOfUsersIn() {
+        return users.size();
     }
 
     private boolean isEqualOrOverThanMaxUser() {
@@ -65,7 +69,7 @@ public abstract class Channel {
 
     private void changeHost() {
         if (!users.isEmpty()) {
-            this.hostUserLoginId = users.get(0).getLoginId();
+            this.hostUserId = users.get(0).getId();
         }
     }
 }

@@ -1,21 +1,18 @@
 package com.example.simple_chatting.dto.textMessage;
 
 import jakarta.validation.constraints.NotEmpty;
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
+@AllArgsConstructor
 public class TextMessageResponse {
     @NotEmpty
     private String senderName;
     @NotEmpty
     private String content;
 
-    @Builder
-    public TextMessageResponse(String senderName, String content) {
-        this.senderName = senderName;
-        this.content = content;
+    public static TextMessageResponse of(String senderName, String content) {
+        return new TextMessageResponse(senderName, content);
     }
 }

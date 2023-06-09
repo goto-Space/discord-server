@@ -1,25 +1,22 @@
 package com.example.simple_chatting.dto.textMessage;
 
+import com.example.simple_chatting.common.ChannelType;
 import jakarta.validation.constraints.NotEmpty;
-import lombok.Builder;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
+@AllArgsConstructor
 public class TextMessageRequest {
+    @NotNull
     private Long userId;
     @NotEmpty
     private String senderName;
+    @NotNull
+    private ChannelType channelType;
+    @NotNull
     private Long channelId;
     @NotEmpty
     private String content;
-
-    @Builder
-    public TextMessageRequest(Long userId, String senderName, Long channelId, String content) {
-        this.userId = userId;
-        this.senderName = senderName;
-        this.channelId = channelId;
-        this.content = content;
-    }
 }

@@ -7,6 +7,8 @@ import java.util.Optional;
 
 public interface ChannelRepository {
 
+    boolean existsById(Long id);
+
     Channel save(Channel channel);
 
     Channel findById(Long id);

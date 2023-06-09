@@ -1,16 +1,17 @@
 package com.example.simple_chatting.dto.channel;
 
-import lombok.Builder;
+import com.example.simple_chatting.domain.channel.Channel;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
+@AllArgsConstructor
 public class CreateChannelResponse {
+    @NotNull
     private Long channelId;
 
-    @Builder
-    public CreateChannelResponse(Long channelId) {
-        this.channelId = channelId;
+    public static CreateChannelResponse of(Channel channel) {
+        return new CreateChannelResponse(channel.getId());
     }
 }

@@ -15,8 +15,8 @@ public class TextChannel extends Channel {
     private List<Text> texts;
 
     @Builder
-    public TextChannel(ChannelType type, String name, String hostUserLoginId) {
-        super(type, name, hostUserLoginId);
+    public TextChannel(ChannelType type, String name, Long hostUserId) {
+        super(type, name, hostUserId);
         texts = new LinkedList<>();
     }
 }

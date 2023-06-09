@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class VoiceOnlyChannel extends Channel {
     @Builder
-    public VoiceOnlyChannel(ChannelType type, String name, String hostUserLoginId) {
-        super(type, name, hostUserLoginId);
+    public VoiceOnlyChannel(ChannelType type, String name, Long hostUserId) {
+        super(type, name, hostUserId);
     }
 }

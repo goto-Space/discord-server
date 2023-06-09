@@ -42,10 +42,7 @@ public class TextChatService {
     }
 
     private TextMessageResponse makeTextMessageResponse(String senderName, String content) {
-        return new TextMessageResponse().builder()
-            .senderName(senderName)
-            .content(content)
-            .build();
+        return TextMessageResponse.of(senderName, content);
     }
 
     private void sendTextMessageToSpecificChannel(Long textChannelId, TextMessageResponse textMessageResponse) {
