@@ -101,7 +101,7 @@ public class ChannelController {
         @LoginUser AccessUser accessUser
     ) {
         channelService.releaseUser(channelId, accessUser.getId());
-        if (channelService.exist(channelId) && ChannelType.TEXT.equals(request.getChannelType())) {
+        if (channelService.existsById(channelId) && ChannelType.TEXT.equals(request.getChannelType())) {
             textChatService.sendLeaveTextMessage(channelId, accessUser.getName());
         }
 
