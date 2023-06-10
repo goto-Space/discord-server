@@ -9,6 +9,7 @@ import com.example.simple_chatting.dto.channel.CreateChannelResponse;
 import com.example.simple_chatting.dto.channel.FindAllChannelResponse;
 import com.example.simple_chatting.dto.channel.FindChannelResponse;
 import com.example.simple_chatting.dto.channel.GetChannelInvitationCodeResponse;
+import com.example.simple_chatting.dto.channel.JoinChannelByInvitationCodeResponse;
 import com.example.simple_chatting.dto.channel.JoinChannelRequest;
 import com.example.simple_chatting.repository.ChannelRepository;
 import com.example.simple_chatting.repository.UserRepository;
@@ -50,6 +51,15 @@ public class ChannelService {
         validateInvitationCode(channel, request.getInvitationCode());
         channel.join(user);
         channelRepository.save(channel);
+    }
+
+    public JoinChannelByInvitationCodeResponse joinByInvitationCode(String invitationCode, Long userId) {
+        Channel channel = channelRepository.findByInvitationCode(invitationCode)
+            .orElseThrow(() -> new IllegalArgumentException("초대 코드가 유효하지않습니다."));
+        User user = userRepository.findById(userId);
+        channel.join(user);
+        channelRepository.save(channel);
+        return JoinChannelByInvitationCodeResponse.of(channel);
     }
 
     public GetChannelInvitationCodeResponse getInvitationCode(Long channelId, Long userId) {

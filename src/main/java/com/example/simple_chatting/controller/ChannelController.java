@@ -6,6 +6,8 @@ import com.example.simple_chatting.dto.channel.CreateChannelResponse;
 import com.example.simple_chatting.dto.channel.FindAllChannelResponse;
 import com.example.simple_chatting.dto.channel.FindChannelResponse;
 import com.example.simple_chatting.dto.channel.GetChannelInvitationCodeResponse;
+import com.example.simple_chatting.dto.channel.JoinChannelByInvitationCodeRequest;
+import com.example.simple_chatting.dto.channel.JoinChannelByInvitationCodeResponse;
 import com.example.simple_chatting.dto.channel.JoinChannelRequest;
 import com.example.simple_chatting.dto.channel.LeaveChannelRequest;
 import com.example.simple_chatting.security.Authentication;
@@ -90,7 +92,8 @@ public class ChannelController {
     @Operation(
         summary = "채널 입장"
     )
-    @PostMapping("/{channelId}/join")
+    @PostMapping("/{channelId}/v1/join")
+    @Deprecated(since = "현재 채널에 입장하려는 사용자가 채널아이디와 채널코드를 모두 알 수 있는 방법이 없음")
     public ResponseEntity<Void> joinChannel(
         @PathVariable Long channelId,
         @RequestBody @Valid JoinChannelRequest request,
@@ -103,6 +106,24 @@ public class ChannelController {
         }
 
         return ResponseEntity.ok().build();
+    }
+
+    @Operation(
+        summary = "초대 코드를 이용한 채널 입장"
+    )
+    @PostMapping("/{invitationCode}/join")
+    public ResponseEntity<JoinChannelByInvitationCodeResponse> joinByInvitationCode(
+        @PathVariable String invitationCode,
+        @RequestBody @Valid JoinChannelByInvitationCodeRequest request,
+        @Authentication LoginUser loginUser
+    ) {
+        JoinChannelByInvitationCodeResponse response = channelService.joinByInvitationCode(invitationCode, loginUser.getId());
+
+        if (ChannelType.TEXT.equals(request.getChannelType())) {
+            textChatService.sendEnterTextMessage(response.getChannelId(), loginUser.getName());
+        }
+
+        return ResponseEntity.ok().body(response);
     }
 
     @Operation(
@@ -123,7 +144,7 @@ public class ChannelController {
     @PostMapping("/{channelId}/release-user")
     public ResponseEntity<Void> releaseUser(
         @PathVariable Long channelId,
-        @RequestBody LeaveChannelRequest request,
+        @RequestBody @Valid LeaveChannelRequest request,
         @Authentication LoginUser loginUser
     ) {
         channelService.releaseUser(channelId, loginUser.getId());

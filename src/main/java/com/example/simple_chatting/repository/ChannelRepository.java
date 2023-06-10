@@ -15,6 +15,8 @@ public interface ChannelRepository {
     // TODO: return Optional
     Channel findById(Long id);
 
+    Optional<Channel> findByInvitationCode(String invitationCode);
+
     Optional<Channel> findByTypeAndName(ChannelType type, String roomName);
 
     Optional<Channel> findByName(String roomName);
