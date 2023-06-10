@@ -55,7 +55,7 @@ public class ChannelController {
     }
 
     @Operation(
-        summary = "사용자가 속한 채널 단건 조회"
+        summary = "(사용자가 속한) 채널 단건 조회"
     )
     @GetMapping("/{channelId}")
     public ResponseEntity<FindChannelResponse> findChannel(
