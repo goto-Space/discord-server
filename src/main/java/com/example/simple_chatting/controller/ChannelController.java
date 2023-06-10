@@ -3,6 +3,8 @@ package com.example.simple_chatting.controller;
 import com.example.simple_chatting.common.ChannelType;
 import com.example.simple_chatting.dto.channel.CreateChannelRequest;
 import com.example.simple_chatting.dto.channel.CreateChannelResponse;
+import com.example.simple_chatting.dto.channel.FindAllChannelResponse;
+import com.example.simple_chatting.dto.channel.FindChannelResponse;
 import com.example.simple_chatting.dto.channel.GetChannelInvitationCodeResponse;
 import com.example.simple_chatting.dto.channel.JoinChannelRequest;
 import com.example.simple_chatting.dto.channel.LeaveChannelRequest;
@@ -48,6 +50,29 @@ public class ChannelController {
             .created(URI.create("/api/channels/" + response.getChannelId()))
             .body(response);
 
+    }
+
+    @Operation(
+        summary = "사용자가 속한 채널 단건 조회"
+    )
+    @GetMapping("/{channelId}")
+    public ResponseEntity<FindChannelResponse> findChannel(
+        @PathVariable Long channelId,
+        @Authentication LoginUser loginUser
+    ) {
+        FindChannelResponse response = channelService.findById(channelId, loginUser.getId());
+        return ResponseEntity.ok().body(response);
+    }
+
+    @Operation(
+        summary = "사용자가 속한 채널 전체 조회"
+    )
+    @GetMapping
+    public ResponseEntity<FindAllChannelResponse> findAllChannels(
+        @Authentication LoginUser loginUser
+    ) {
+        FindAllChannelResponse response = channelService.findAll(loginUser.getId());
+        return ResponseEntity.ok().body(response);
     }
 
     @Operation(

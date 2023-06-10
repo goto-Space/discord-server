@@ -2,6 +2,7 @@ package com.example.simple_chatting.repository;
 
 import com.example.simple_chatting.common.ChannelType;
 import com.example.simple_chatting.domain.channel.Channel;
+import com.example.simple_chatting.domain.user.User;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,6 +12,7 @@ public interface ChannelRepository {
 
     Channel save(Channel channel);
 
+    // TODO: return Optional
     Channel findById(Long id);
 
     Optional<Channel> findByTypeAndName(ChannelType type, String roomName);
@@ -22,4 +24,6 @@ public interface ChannelRepository {
     void clear();
 
     void deleteById(Long id);
+
+    List<Channel> findAllByUser(User user);
 }
