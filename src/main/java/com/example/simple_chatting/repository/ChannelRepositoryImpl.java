@@ -37,9 +37,16 @@ public class ChannelRepositoryImpl implements ChannelRepository {
     }
 
     @Override
-    public Optional<Channel> findByTypeAndName(ChannelType type, String roomName) {
+    public Optional<Channel> findByInvitationCode(String invitationCode) {
         return findAll().stream()
-            .filter(room -> room.getType().equals(type) && room.getName().equals(roomName))
+            .filter(channel -> channel.getInvitationCode().equals(invitationCode))
+            .findFirst();
+    }
+
+    @Override
+    public Optional<Channel> findByTypeAndName(ChannelType type, String name) {
+        return findAll().stream()
+            .filter(channel -> channel.getType().equals(type) && channel.getName().equals(name))
             .findFirst();
     }
 
