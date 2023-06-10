@@ -33,6 +33,10 @@ public abstract class Channel {
     }
 
     public void join(User user) {
+        if (contains(user)) {
+            throw new IllegalArgumentException("이미 채팅방에 존재하는 사용자입니다.");
+        }
+
         if (isEqualOrOverThanMaxUser()) {
             throw new IllegalStateException("한 채팅방에는 동시에 최대 6명까지 참여할 수 있습니다.");
         }
