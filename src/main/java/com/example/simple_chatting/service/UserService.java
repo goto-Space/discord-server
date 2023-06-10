@@ -5,7 +5,7 @@ import com.example.simple_chatting.dto.user.LoginUserRequest;
 import com.example.simple_chatting.dto.user.SignUpUserRequest;
 import com.example.simple_chatting.dto.user.SignUpUserResponse;
 import com.example.simple_chatting.repository.UserRepository;
-import com.example.simple_chatting.security.AccessUser;
+import com.example.simple_chatting.security.LoginUser;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,11 +21,11 @@ public class UserService {
         return SignUpUserResponse.of(savedUser);
     }
 
-    public AccessUser login(LoginUserRequest request) {
+    public LoginUser login(LoginUserRequest request) {
         User user = userRepository.findByLoginId(request.getLoginId())
             .orElseThrow(() -> new IllegalStateException("사용자 정보가 일치하지 않습니다."));
         user.authenticate(request.getPassword());
-        return AccessUser.of(user.getId(), user.getName());
+        return LoginUser.of(user.getId(), user.getName());
     }
 
     private void validateDuplicateLoginIdAndPasswordPair(SignUpUserRequest request) {

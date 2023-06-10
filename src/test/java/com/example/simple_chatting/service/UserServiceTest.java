@@ -3,7 +3,7 @@ package com.example.simple_chatting.service;
 import com.example.simple_chatting.dto.user.LoginUserRequest;
 import com.example.simple_chatting.dto.user.SignUpUserRequest;
 import com.example.simple_chatting.repository.UserRepository;
-import com.example.simple_chatting.security.AccessUser;
+import com.example.simple_chatting.security.LoginUser;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,9 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 class UserServiceTest {
@@ -62,10 +60,10 @@ class UserServiceTest {
 
         //when
         userService.signUp(signUpUserRequest);
-        AccessUser accessUser = userService.login(loginUserRequest);
+        LoginUser loginUser = userService.login(loginUserRequest);
 
         //then
-        assertEquals(loginId, accessUser.getId());
+        assertEquals(loginId, loginUser.getId());
     }
 
 //    @Test

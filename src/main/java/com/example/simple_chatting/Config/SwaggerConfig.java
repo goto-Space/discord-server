@@ -1,6 +1,6 @@
 package com.example.simple_chatting.config;
 
-import com.example.simple_chatting.security.LoginUser;
+import com.example.simple_chatting.security.Authentication;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +15,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SwaggerConfig {
     static {
-        SpringDocUtils.getConfig().addAnnotationsToIgnore(LoginUser.class);
+        SpringDocUtils.getConfig().addAnnotationsToIgnore(Authentication.class);
     }
 }
