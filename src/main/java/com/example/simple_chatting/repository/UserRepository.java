@@ -17,4 +17,6 @@ public interface UserRepository {
     List<User> findAll();
 
     void clear();
+
+    List<User> findAllByIds(List<Long> ids);
 }
