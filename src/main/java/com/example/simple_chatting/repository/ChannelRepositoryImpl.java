@@ -2,12 +2,14 @@ package com.example.simple_chatting.repository;
 
 import com.example.simple_chatting.common.ChannelType;
 import com.example.simple_chatting.domain.channel.Channel;
+import com.example.simple_chatting.domain.user.User;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -44,7 +46,7 @@ public class ChannelRepositoryImpl implements ChannelRepository {
     @Override
     public Optional<Channel> findByName(String roomName) {
         return findAll().stream()
-            .filter(room -> room.getName().equals(roomName))
+            .filter(channel -> channel.getName().equals(roomName))
             .findFirst();
     }
 
@@ -60,5 +62,12 @@ public class ChannelRepositoryImpl implements ChannelRepository {
     @Override
     public void deleteById(Long id) {
         store.remove(id);
+    }
+
+    @Override
+    public List<Channel> findAllByUser(User user) {
+        return findAll().stream()
+            .filter(channel -> channel.contains(user))
+            .collect(Collectors.toList());
     }
 }

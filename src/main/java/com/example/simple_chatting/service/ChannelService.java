@@ -6,13 +6,19 @@ import com.example.simple_chatting.domain.channel.ChannelFactory;
 import com.example.simple_chatting.domain.user.User;
 import com.example.simple_chatting.dto.channel.CreateChannelRequest;
 import com.example.simple_chatting.dto.channel.CreateChannelResponse;
+import com.example.simple_chatting.dto.channel.FindAllChannelResponse;
+import com.example.simple_chatting.dto.channel.FindChannelResponse;
 import com.example.simple_chatting.dto.channel.GetChannelInvitationCodeResponse;
 import com.example.simple_chatting.dto.channel.JoinChannelRequest;
 import com.example.simple_chatting.repository.ChannelRepository;
 import com.example.simple_chatting.repository.UserRepository;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toList;
 
 @Service
 @RequiredArgsConstructor
@@ -70,6 +76,24 @@ public class ChannelService {
 
     public boolean existsById(Long channelId) {
         return channelRepository.existsById(channelId);
+    }
+
+    public FindChannelResponse findById(Long channelId, Long userId) {
+        validateChannelExistence(channelId);
+        Channel channel = channelRepository.findById(channelId);
+        User user = userRepository.findById(userId);
+        validateChannelUser(channel, user);
+
+        return FindChannelResponse.of(channel);
+    }
+
+    public FindAllChannelResponse findAll(Long userId) {
+        User user = userRepository.findById(userId);
+        List<Channel> findChannels = channelRepository.findAllByUser(user);
+
+        return findChannels.stream()
+            .map(FindChannelResponse::of)
+            .collect(collectingAndThen(toList(), findChannelResponses -> FindAllChannelResponse.of(findChannelResponses)));
     }
 
     private void validateDuplicateChannelTypeAndName(ChannelType type, String name) {
