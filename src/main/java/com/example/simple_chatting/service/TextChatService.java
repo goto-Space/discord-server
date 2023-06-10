@@ -46,7 +46,7 @@ public class TextChatService {
     }
 
     private void sendTextMessageToSpecificChannel(Long textChannelId, TextMessageResponse textMessageResponse) {
-        simpMessagingTemplate.convertAndSend("/sub/chat/channel/" + textChannelId, textMessageResponse);
+        simpMessagingTemplate.convertAndSend("/sub/channels/" + textChannelId, textMessageResponse);
     }
 
     private String makeLeaveTextContent(String senderName) {
