@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -71,14 +72,26 @@ public class UserController {
     }
 
     @Operation(
-        summary = "사용자 단건 조회"
+        summary = "userId를 이용한 사용자 단건 조회"
     )
     @GetMapping("/{userId}")
-    public ResponseEntity<FindUserResponse> findUser(
+    public ResponseEntity<FindUserResponse> findUserById(
         @PathVariable Long userId,
         @Authentication LoginUser loginUser
     ) {
         FindUserResponse response = userService.findById(userId);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @Operation(
+        summary = "로그인 아이디를 이용한 사용자 단건 조회"
+    )
+    @GetMapping
+    public ResponseEntity<FindUserResponse> findUserByLoginId(
+        @RequestParam(value = "loginId") String loginId,
+        @Authentication LoginUser loginUser
+    ) {
+        FindUserResponse response = userService.findByLoginId(loginId);
         return ResponseEntity.ok().body(response);
     }
 
