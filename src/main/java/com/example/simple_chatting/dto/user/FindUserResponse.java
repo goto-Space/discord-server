@@ -7,9 +7,10 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class FindUserResponse {
+    private Long userId;
     private String name;
 
     public static FindUserResponse of(User user) {
-        return new FindUserResponse(user.getName());
+        return new FindUserResponse(user.getId(), user.getName());
     }
 }
