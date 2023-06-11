@@ -47,6 +47,12 @@ public class UserService {
         return FindUserResponse.of(user);
     }
 
+    public FindUserResponse findByLoginId(String loginId) {
+        User user = userRepository.findByLoginId(loginId)
+            .orElseThrow(() -> new IllegalStateException("사용자 정보가 일치하지 않습니다."));
+        return FindUserResponse.of(user);
+    }
+
     public FindAllUserResponse findAll(FindAllUserRequest request) {
         List<User> findUsers = userRepository.findAllByIds(request.getUserIds());
 
