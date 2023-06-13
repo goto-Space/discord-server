@@ -3,6 +3,8 @@ package com.example.simple_chatting.service;
 import com.example.simple_chatting.common.ChannelType;
 import com.example.simple_chatting.domain.channel.Channel;
 import com.example.simple_chatting.domain.channel.ChannelFactory;
+import com.example.simple_chatting.domain.channel.VideoChannel;
+import com.example.simple_chatting.domain.channel.VoiceOnlyChannel;
 import com.example.simple_chatting.domain.user.User;
 import com.example.simple_chatting.dto.channel.CreateChannelRequest;
 import com.example.simple_chatting.dto.channel.CreateChannelResponse;
@@ -17,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.socket.WebSocketSession;
 
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
@@ -95,6 +98,22 @@ public class ChannelService {
         validateChannelUser(channel, user);
 
         return FindChannelResponse.of(channel);
+    }
+
+    public List<WebSocketSession> getChannelClientSessions(Long channelId) {
+        Channel channel = channelRepository.findById(channelId);
+
+        if (channel.getType().equals(ChannelType.VOICE_ONLY)) {
+            VoiceOnlyChannel voiceOnlyChannel = (VoiceOnlyChannel) channel;
+            return voiceOnlyChannel.getClientSessions();
+        }
+
+        if (channel.getType().equals(ChannelType.VIDEO)) {
+            VideoChannel videoChannel = (VideoChannel) channel;
+            return videoChannel.getClientSessions();
+        }
+
+        return null;
     }
 
     public FindAllChannelResponse findAll(Long userId) {

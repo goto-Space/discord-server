@@ -12,11 +12,19 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TextChannel extends Channel {
-    private List<Text> texts;
+    private List<Text> textLogs;
 
     @Builder
     public TextChannel(ChannelType type, String name, Long hostUserId) {
         super(type, name, hostUserId);
-        texts = new LinkedList<>();
+        textLogs = new LinkedList<>();
+    }
+
+    public void addTextLog(Text text) {
+        textLogs.add(text);
+    }
+
+    public List<Text> getTextLogs() {
+        return textLogs;
     }
 }

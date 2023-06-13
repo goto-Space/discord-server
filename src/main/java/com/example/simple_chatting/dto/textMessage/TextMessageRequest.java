@@ -8,10 +8,12 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class TextMessageRequest {
-    @NotEmpty
-    private String senderName;
     @NotNull
     private Long channelId;
     @NotEmpty
+    private String senderName;
+    @NotEmpty
     private String content;
+    @NotEmpty
+    private String createdAt;
 }
