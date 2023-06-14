@@ -1,6 +1,5 @@
 package com.example.simple_chatting.config;
 
-import com.example.simple_chatting.security.LogInterceptor;
 import com.example.simple_chatting.security.LoginCheckInterceptor;
 import com.example.simple_chatting.security.LoginUserArgumentResolver;
 import java.util.List;
@@ -24,13 +23,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new LogInterceptor())
-            .order(1)
-            .addPathPatterns("/**")
-            .excludePathPatterns("/css/**", "/*.ico", "/error");
-
         registry.addInterceptor(new LoginCheckInterceptor())
-            .order(2)
+            .order(1)
             .addPathPatterns("/**")
             .excludePathPatterns("/", "/api/users/signup", "/api/users/login", "/error",
                 "/swagger-resources/**", "/swagger-ui/**", "/v3/api-docs/**");
